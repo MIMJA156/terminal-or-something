@@ -1,0 +1,12 @@
+{
+    "": {
+        ">type": "dir",
+        "root": {
+            ">type": "dir",
+            "myfile.txt": {
+                ">type": "file",
+                "contents": "Hello, World!"
+            }
+        }
+    }
+}
