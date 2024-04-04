@@ -58,7 +58,7 @@ export default function COMMAND_cd(args: string[]): number {
         let item = layer[path[depth]];
 
         if (item !== undefined) {
-            if (path.length - 1 === depth && item.type === "dir") {
+            if (path.length - 1 === depth && item[">type"] === "dir") {
                 return true
             }
 

@@ -1,6 +1,6 @@
 import { commandHistory, commandOutput, currentWorkingDirectory, hostname, inputBuffer } from "./globals";
 import parseCommand from "./parser";
-import { charBufferToString } from "./utils";
+import { charBufferToString, stringToCharBuffer } from "./utils";
 
 const keyMap = {
     "enter": "Enter",
@@ -40,6 +40,8 @@ function createNewOutputLine(content: string) {
     historyContainer.appendChild(newLine);
 }
 
+let historyWalkPosition = 0;
+
 document.addEventListener("keydown", (event) => {
     switch (event.key) {
         // ignore these keys for now
@@ -47,10 +49,40 @@ document.addEventListener("keydown", (event) => {
             break;
         case keyMap.control:
             break;
-        case keyMap.upArrow:
+
+        case keyMap.upArrow: {
+            let history = commandHistory.getValue();
+
+            historyWalkPosition += 1;
+            if (historyWalkPosition > history.length) { historyWalkPosition = history.length };
+            let historyIndex = history.length - historyWalkPosition;
+            let historyItem = history[historyIndex];
+
+            if (historyItem === undefined) {
+                inputBuffer.setValue([]);
+            } else {
+                inputBuffer.setValue(stringToCharBuffer(historyItem));
+            }
             break;
-        case keyMap.downArrow:
+        }
+
+        case keyMap.downArrow: {
+            let history = commandHistory.getValue();
+
+            historyWalkPosition -= 1;
+            if (historyWalkPosition < 1) { historyWalkPosition = 0; }
+            let historyIndex = history.length - historyWalkPosition;
+            let historyItem = history[historyIndex];
+
+            if (historyItem === undefined) {
+                inputBuffer.setValue([]);
+            } else {
+                inputBuffer.setValue(stringToCharBuffer(historyItem));
+            }
+
             break;
+        }
+
         case keyMap.leftArrow:
             break;
         case keyMap.rightArrow:
@@ -59,8 +91,9 @@ document.addEventListener("keydown", (event) => {
         // actually used keys
         case keyMap.enter:
             let inputString = charBufferToString(inputBuffer.getValue())
+            if (inputString !== "") commandHistory.getValue().push(inputString);
+
             createNewHistoryLine(inputString);
-            commandHistory.getValue().push(inputString);
             inputBuffer.setValue([]);
 
             let command = parseCommand(inputString);
@@ -86,6 +119,8 @@ document.addEventListener("keydown", (event) => {
                 createNewOutputLine(commandOutput.getValue());
                 commandOutput.setValue("");
             }
+
+            historyWalkPosition = 0;
 
             break;
 
