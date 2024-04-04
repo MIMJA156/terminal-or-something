@@ -2,7 +2,7 @@ interface CommandRegistry {
     [key: string]: (args: string[]) => number;
 }
 
-interface Command {
+interface CommandUnit {
     exec: ((args: string[]) => number),
     args: string[]
 }

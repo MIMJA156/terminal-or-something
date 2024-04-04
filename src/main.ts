@@ -49,7 +49,12 @@ document.addEventListener("keydown", (event) => {
             break;
         case keyMap.control:
             break;
+        case keyMap.leftArrow:
+            break;
+        case keyMap.rightArrow:
+            break;
 
+        // actually used keys
         case keyMap.upArrow: {
             let history = commandHistory.getValue();
 
@@ -79,16 +84,9 @@ document.addEventListener("keydown", (event) => {
             } else {
                 inputBuffer.setValue(stringToCharBuffer(historyItem));
             }
-
             break;
         }
 
-        case keyMap.leftArrow:
-            break;
-        case keyMap.rightArrow:
-            break;
-
-        // actually used keys
         case keyMap.enter:
             let inputString = charBufferToString(inputBuffer.getValue())
             if (inputString !== "") commandHistory.getValue().push(inputString);
@@ -121,9 +119,7 @@ document.addEventListener("keydown", (event) => {
             }
 
             historyWalkPosition = 0;
-
             break;
-
 
         case keyMap.backspace:
             inputBuffer.getValue().pop();
@@ -151,6 +147,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
     requestAnimationFrame(doAnimations);
 });
-
 
 console.log("Hello, World!")

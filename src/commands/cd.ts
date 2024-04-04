@@ -1,8 +1,13 @@
 import { commandOutput, currentWorkingDirectory } from "../globals";
 import fileSystem from "../fileSystem.json"
 
+export function INFORMATION_cd(): string {
+    return `
+    cd - allows you to move directors
+    `
+}
 
-export default function COMMAND_cd(args: string[]): number {
+export function COMMAND_cd(args: string[]): number {
     if (args.length < 2) { commandOutput.setValue("bad number of args"); return 1; }
     let cwd = currentWorkingDirectory.getValue();
     let cwdPath = cwd.split("/").filter((item) => item !== "");

@@ -1,7 +1,13 @@
 import { commandOutput, currentWorkingDirectory } from "../globals";
 import fileSystem from "../fileSystem.json"
 
-export default function COMMAND_list(_args: string[]): number {
+export function INFORMATION_ls(): string {
+    return `
+    ls - lists all items in a directory
+    `
+}
+
+export function COMMAND_ls(_args: string[]): number {
     let cwd = currentWorkingDirectory.getValue();
     let nameArray = cwd.split("/").filter((item) => item !== "");
     nameArray.splice(0, 0, "");

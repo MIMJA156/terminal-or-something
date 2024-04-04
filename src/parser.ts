@@ -1,16 +1,16 @@
-import COMMAND_list from "./commands/list";
-import COMMAND_clear from "./commands/clear";
+import { COMMAND_ls } from "./commands/ls";
+import { COMMAND_clear } from "./commands/clear";
 import { commandOutput } from "./globals";
-import COMMAND_cd from "./commands/cd";
+import { COMMAND_cd } from "./commands/cd";
 
 const registry: CommandRegistry = {
     "clear": COMMAND_clear,
-    "ls": COMMAND_list,
+    "ls": COMMAND_ls,
     "cd": COMMAND_cd
 }
 
-export default function parseCommand(command: string): Command | null {
-    let trimmedCommand = command.trim();
+export default function parseCommand(commandString: string): CommandUnit | null {
+    let trimmedCommand = commandString.trim();
     let splitCommand = trimmedCommand.split(" ");
     let commandExec = splitCommand[0];
 
