@@ -8,7 +8,7 @@ export function INFORMATION_ls(): string {
     `
 }
 
-export function COMMAND_ls(_args: string[]): number {
+export async function COMMAND_ls(_args: string[]): Promise<number> {
     let cwd = currentWorkingDirectory.getValue();
     let nameArray = cwd.split("/").filter((item) => item !== "");
     nameArray.splice(0, 0, "");

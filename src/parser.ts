@@ -1,13 +1,14 @@
 import { COMMAND_ls, INFORMATION_ls } from "./commands/ls";
 import { COMMAND_clear, INFORMATION_clear } from "./commands/clear";
-import { outputBuffer } from "./globals";
 import { COMMAND_cd, INFORMATION_cd } from "./commands/cd";
-import { stringToCharBuffer, tPrintln } from "./utils";
+import { tPrintln } from "./utils";
+import { COMMAND_load } from "./commands/load";
 
 const registry: CommandRegistry = {
     "clear": COMMAND_clear,
     "ls": COMMAND_ls,
-    "cd": COMMAND_cd
+    "cd": COMMAND_cd,
+    "load": COMMAND_load
 }
 
 const infoRegistry: InformationRegistry = {
@@ -17,7 +18,7 @@ const infoRegistry: InformationRegistry = {
 }
 
 const topLevelCommandsRegistry: CommandRegistry = {
-    "info": (args: string[]): number => {
+    "info": async (args: string[]): Promise<number> => {
         if (args.length < 2) { return 1; }
 
         let infoFunction = infoRegistry[args[1]];

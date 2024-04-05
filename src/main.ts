@@ -17,8 +17,11 @@ const inputBufferDisplay = document.getElementById("input-buffer-display");
 if (inputBufferDisplay === null) throw Error("Bad Buffer Display");
 
 let historyWalkPosition = 0;
+let runningCommand = false;
 
-document.addEventListener("keydown", (event) => {
+document.addEventListener("keydown", async (event) => {
+    if (runningCommand) return;
+
     switch (event.key) {
         // ignore these keys for now
         case keyMap.shift:
@@ -73,15 +76,7 @@ document.addEventListener("keydown", (event) => {
             inputBuffer.setValue([]);
 
             let command = parseCommand(inputString);
-            if (command) {
-                let exitCode = command.exec(command.args);
-
-                if (exitCode === 1) {
-                    if (charBufferToString(outputBuffer.getValue()) === "") {
-                        tPrintln(`exit code: ${exitCode}`);
-                    }
-                }
-            }
+            if (command) { runningCommand = true; await command.exec(command.args); runningCommand = false; }
 
             historyWalkPosition = 0;
             break;
@@ -111,6 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
             needsToScroll = true;
         }
 
+        let inputLine = document.getElementById("input-line")!;
         let hostnameItem = document.getElementById("hostname")!;
         let cwdItem = document.getElementById("current-working-directory")!;
         let displayItem = document.getElementById("input-buffer-display")!;
@@ -120,6 +116,12 @@ document.addEventListener("DOMContentLoaded", () => {
         cwdItem.innerHTML = currentWorkingDirectory.getValue();
         displayItem.innerText = charBufferToString(inputBuffer.getValue());
         historyItem.innerText = charBufferToString(outputContainer.getValue());
+
+        if (runningCommand) {
+            inputLine.style.display = "none";
+        } else {
+            inputLine.style.display = "";
+        }
 
         if (needsToScroll) window.scrollTo(0, document.body.scrollHeight);
 

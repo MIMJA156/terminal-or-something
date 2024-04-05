@@ -6,7 +6,7 @@ export function INFORMATION_clear(): string {
     `
 }
 
-export function COMMAND_clear(_args: string[]): number {
+export async function COMMAND_clear(_args: string[]): Promise<number> {
     outputBuffer.setValue([]);
     outputContainer.setValue([]);
     return 0;

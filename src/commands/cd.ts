@@ -1,6 +1,6 @@
-import { outputBuffer, currentWorkingDirectory } from "../globals";
+import { currentWorkingDirectory } from "../globals";
 import fileSystem from "../fileSystem.json"
-import { stringToCharBuffer, tPrintln } from "../utils";
+import { tPrintln } from "../utils";
 
 export function INFORMATION_cd(): string {
     return `
@@ -8,7 +8,7 @@ export function INFORMATION_cd(): string {
     `
 }
 
-export function COMMAND_cd(args: string[]): number {
+export async function COMMAND_cd(args: string[]): Promise<number> {
     if (args.length < 2) { tPrintln("bad number of args"); return 1; }
 
     let cwd = currentWorkingDirectory.getValue();

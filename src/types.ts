@@ -3,11 +3,11 @@ interface InformationRegistry {
 }
 
 interface CommandRegistry {
-    [key: string]: (args: string[]) => number;
+    [key: string]: (args: string[]) => Promise<number>;
 }
 
 interface CommandUnit {
-    exec: ((args: string[]) => number),
+    exec: ((args: string[]) => Promise<number>),
     args: string[]
 }
 
