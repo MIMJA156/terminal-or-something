@@ -1,5 +1,6 @@
-import { commandOutput, currentWorkingDirectory } from "../globals";
+import { outputBuffer, currentWorkingDirectory } from "../globals";
 import fileSystem from "../fileSystem.json"
+import { stringToCharBuffer } from "../utils";
 
 export function INFORMATION_ls(): string {
     return `
@@ -38,7 +39,7 @@ export function COMMAND_ls(_args: string[]): number {
         formattedOutput += `${item}\n`
     });
 
-    commandOutput.setValue(formattedOutput);
+    outputBuffer.setValue(stringToCharBuffer(formattedOutput));
 
     return 0;
 }

@@ -1,3 +1,7 @@
+interface InformationRegistry {
+    [key: string]: () => string;
+}
+
 interface CommandRegistry {
     [key: string]: (args: string[]) => number;
 }

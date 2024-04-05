@@ -1,4 +1,4 @@
-import { commandHistory, commandOutput, currentWorkingDirectory, hostname, inputBuffer } from "./globals";
+import { commandHistory, outputBuffer, currentWorkingDirectory, hostname, inputBuffer } from "./globals";
 import parseCommand from "./parser";
 import { charBufferToString, stringToCharBuffer } from "./utils";
 
@@ -89,7 +89,9 @@ document.addEventListener("keydown", (event) => {
 
         case keyMap.enter:
             let inputString = charBufferToString(inputBuffer.getValue())
-            if (inputString !== "") commandHistory.getValue().push(inputString);
+            if (inputString === "") { createNewHistoryLine(""); return; }
+
+            commandHistory.getValue().push(inputString);
 
             createNewHistoryLine(inputString);
             inputBuffer.setValue([]);
@@ -99,23 +101,23 @@ document.addEventListener("keydown", (event) => {
                 let exitCode = command.exec(command.args);
 
                 if (exitCode === 1) {
-                    if (commandOutput.getValue() === "") {
-                        createNewOutputLine(`exit code: ${exitCode}`)
+                    if (charBufferToString(outputBuffer.getValue()) === "") {
+                        createNewOutputLine(`exit code: ${exitCode}`);
                     } else {
-                        createNewOutputLine(commandOutput.getValue());
-                        commandOutput.setValue("");
+                        createNewOutputLine(charBufferToString(outputBuffer.getValue()));
+                        outputBuffer.setValue([]);
                     }
                 }
 
                 if (exitCode === 0) {
-                    createNewOutputLine(commandOutput.getValue());
-                    commandOutput.setValue("");
+                    createNewOutputLine(charBufferToString(outputBuffer.getValue()));
+                    outputBuffer.setValue([]);
                 }
             }
 
             if (!command) {
-                createNewOutputLine(commandOutput.getValue());
-                commandOutput.setValue("");
+                createNewOutputLine(charBufferToString(outputBuffer.getValue()));
+                outputBuffer.setValue([]);
             }
 
             historyWalkPosition = 0;
@@ -133,7 +135,7 @@ document.addEventListener("keydown", (event) => {
 })
 
 document.addEventListener("DOMContentLoaded", () => {
-    function doAnimations() {
+    function doFrameStuff() {
         let hostnameItem = document.getElementById("hostname")!;
         let cwdItem = document.getElementById("current-working-directory")!;
         let displayItem = document.getElementById("input-buffer-display")!;
@@ -142,10 +144,10 @@ document.addEventListener("DOMContentLoaded", () => {
         cwdItem.innerHTML = currentWorkingDirectory.getValue();
         displayItem.innerText = charBufferToString(inputBuffer.getValue());
 
-        requestAnimationFrame(doAnimations);
+        requestAnimationFrame(doFrameStuff);
     }
 
-    requestAnimationFrame(doAnimations);
+    requestAnimationFrame(doFrameStuff);
 });
 
 console.log("Hello, World!")

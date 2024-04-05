@@ -1,5 +1,6 @@
-import { commandOutput, currentWorkingDirectory } from "../globals";
+import { outputBuffer, currentWorkingDirectory } from "../globals";
 import fileSystem from "../fileSystem.json"
+import { stringToCharBuffer } from "../utils";
 
 export function INFORMATION_cd(): string {
     return `
@@ -8,7 +9,8 @@ export function INFORMATION_cd(): string {
 }
 
 export function COMMAND_cd(args: string[]): number {
-    if (args.length < 2) { commandOutput.setValue("bad number of args"); return 1; }
+    if (args.length < 2) { outputBuffer.setValue(stringToCharBuffer("bad number of args")); return 1; }
+
     let cwd = currentWorkingDirectory.getValue();
     let cwdPath = cwd.split("/").filter((item) => item !== "");
     cwdPath.splice(0, 0, "");
@@ -78,7 +80,7 @@ export function COMMAND_cd(args: string[]): number {
     if (newPath.length > 0) newSearchablePath.splice(0, 0, "");
 
     let isValidPath = internal2(newSearchablePath, 0, fileSystem);
-    if (!isValidPath) { commandOutput.setValue("bad file path"); return 1; }
+    if (!isValidPath) { outputBuffer.setValue(stringToCharBuffer("bad file path")); return 1; }
 
     let textPath = "";
 
