@@ -10,7 +10,7 @@ const keyMap = {
     "leftArrow": "ArrowLeft",
     "rightArrow": "ArrowRight",
     "upArrow": "ArrowUp",
-    "downArrow": "ArrowDown"
+    "downArrow": "ArrowDown",
 }
 
 const inputBufferDisplay = document.getElementById("input-buffer-display");
@@ -19,7 +19,10 @@ if (inputBufferDisplay === null) throw Error("Bad Buffer Display");
 let historyWalkPosition = 0;
 let runningCommand = false;
 
+let inControlScope = false;
+
 document.addEventListener("keydown", async (event) => {
+    if (event.key === keyMap.control) inControlScope = true;
     if (runningCommand) return;
 
     switch (event.key) {
@@ -91,6 +94,10 @@ document.addEventListener("keydown", async (event) => {
 
     }
 })
+
+document.addEventListener("keyup", async (event) => {
+    if (event.key === keyMap.control) inControlScope = false;
+});
 
 document.addEventListener("DOMContentLoaded", () => {
     function doFrameStuff() {

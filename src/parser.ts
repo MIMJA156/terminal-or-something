@@ -2,7 +2,7 @@ import { COMMAND_ls, INFORMATION_ls } from "./commands/ls";
 import { COMMAND_clear, INFORMATION_clear } from "./commands/clear";
 import { COMMAND_cd, INFORMATION_cd } from "./commands/cd";
 import { tPrintln } from "./utils";
-import { COMMAND_load } from "./commands/load";
+import { COMMAND_load, INFORMATION_load } from "./commands/load";
 
 const registry: CommandRegistry = {
     "clear": COMMAND_clear,
@@ -15,6 +15,7 @@ const infoRegistry: InformationRegistry = {
     "clear": INFORMATION_clear,
     "ls": INFORMATION_ls,
     "cd": INFORMATION_cd,
+    "load": INFORMATION_load
 }
 
 const topLevelCommandsRegistry: CommandRegistry = {
@@ -27,7 +28,7 @@ const topLevelCommandsRegistry: CommandRegistry = {
             tPrintln(infoFunction());
             return 0
         } else {
-            tPrintln(`Unknown command "${args[1]}"`);
+            tPrintln(`no information for command "${args[1]}"`);
             return 1
         }
     }
