@@ -1,6 +1,6 @@
-import { commandHistory, outputBuffer, currentWorkingDirectory, hostname, inputBuffer } from "./globals";
+import { commandHistory, outputBuffer, currentWorkingDirectory, hostname, inputBuffer, outputContainer } from "./globals";
 import parseCommand from "./parser";
-import { charBufferToString, stringToCharBuffer } from "./utils";
+import { charBufferToString, stringToCharBuffer, tPrintln } from "./utils";
 
 const keyMap = {
     "enter": "Enter",
@@ -15,30 +15,6 @@ const keyMap = {
 
 const inputBufferDisplay = document.getElementById("input-buffer-display");
 if (inputBufferDisplay === null) throw Error("Bad Buffer Display");
-
-function createNewHistoryLine(content: string) {
-    let historyContainer = document.getElementById("history");
-    if (historyContainer === null) return;
-
-    let newLine = document.createElement("span");
-    newLine.classList.add("terminal-line");
-    newLine.classList.add("terminal-history");
-    newLine.innerHTML = `${hostname.getValue()}:${currentWorkingDirectory.getValue()}#  ${content}`;
-
-    historyContainer.appendChild(newLine);
-}
-
-function createNewOutputLine(content: string) {
-    let historyContainer = document.getElementById("history");
-    if (historyContainer === null) return;
-
-    let newLine = document.createElement("span");
-    newLine.classList.add("terminal-line");
-    newLine.classList.add("terminal-history");
-    newLine.innerHTML = `${content}`;
-
-    historyContainer.appendChild(newLine);
-}
 
 let historyWalkPosition = 0;
 
@@ -89,11 +65,11 @@ document.addEventListener("keydown", (event) => {
 
         case keyMap.enter:
             let inputString = charBufferToString(inputBuffer.getValue())
-            if (inputString === "") { createNewHistoryLine(""); return; }
+            if (inputString === "") { tPrintln(`${hostname.getValue()}:${currentWorkingDirectory.getValue()}#`); return; }
 
             commandHistory.getValue().push(inputString);
 
-            createNewHistoryLine(inputString);
+            tPrintln(`${hostname.getValue()}:${currentWorkingDirectory.getValue()}#  ${inputString}`);
             inputBuffer.setValue([]);
 
             let command = parseCommand(inputString);
@@ -102,22 +78,9 @@ document.addEventListener("keydown", (event) => {
 
                 if (exitCode === 1) {
                     if (charBufferToString(outputBuffer.getValue()) === "") {
-                        createNewOutputLine(`exit code: ${exitCode}`);
-                    } else {
-                        createNewOutputLine(charBufferToString(outputBuffer.getValue()));
-                        outputBuffer.setValue([]);
+                        tPrintln(`exit code: ${exitCode}`);
                     }
                 }
-
-                if (exitCode === 0) {
-                    createNewOutputLine(charBufferToString(outputBuffer.getValue()));
-                    outputBuffer.setValue([]);
-                }
-            }
-
-            if (!command) {
-                createNewOutputLine(charBufferToString(outputBuffer.getValue()));
-                outputBuffer.setValue([]);
             }
 
             historyWalkPosition = 0;
@@ -136,13 +99,29 @@ document.addEventListener("keydown", (event) => {
 
 document.addEventListener("DOMContentLoaded", () => {
     function doFrameStuff() {
+        let needsToScroll = false;
+
+        if (outputBuffer.getValue().length > 0) {
+            let containerPointer = outputContainer.getValue();
+            let bufferPointer = outputBuffer.getValue();
+
+            Array.prototype.push.apply(containerPointer, bufferPointer);
+            outputBuffer.setValue([]);
+
+            needsToScroll = true;
+        }
+
         let hostnameItem = document.getElementById("hostname")!;
         let cwdItem = document.getElementById("current-working-directory")!;
         let displayItem = document.getElementById("input-buffer-display")!;
+        let historyItem = document.getElementById("history-buffer-display")!;
 
         hostnameItem.innerHTML = hostname.getValue();
         cwdItem.innerHTML = currentWorkingDirectory.getValue();
         displayItem.innerText = charBufferToString(inputBuffer.getValue());
+        historyItem.innerText = charBufferToString(outputContainer.getValue());
+
+        if (needsToScroll) window.scrollTo(0, document.body.scrollHeight);
 
         requestAnimationFrame(doFrameStuff);
     }

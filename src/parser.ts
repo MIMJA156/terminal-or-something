@@ -2,7 +2,7 @@ import { COMMAND_ls, INFORMATION_ls } from "./commands/ls";
 import { COMMAND_clear, INFORMATION_clear } from "./commands/clear";
 import { outputBuffer } from "./globals";
 import { COMMAND_cd, INFORMATION_cd } from "./commands/cd";
-import { stringToCharBuffer } from "./utils";
+import { stringToCharBuffer, tPrintln } from "./utils";
 
 const registry: CommandRegistry = {
     "clear": COMMAND_clear,
@@ -23,10 +23,10 @@ const topLevelCommandsRegistry: CommandRegistry = {
         let infoFunction = infoRegistry[args[1]];
 
         if (infoFunction !== undefined) {
-            outputBuffer.setValue(stringToCharBuffer(infoFunction()));
+            tPrintln(infoFunction());
             return 0
         } else {
-            outputBuffer.setValue(stringToCharBuffer(`Unknown command "${args[1]}"`));
+            tPrintln(`Unknown command "${args[1]}"`);
             return 1
         }
     }
@@ -45,7 +45,7 @@ export default function parseCommand(commandString: string): CommandUnit | null 
             args: splitCommand
         };
     } else {
-        outputBuffer.setValue(stringToCharBuffer(`Unknown command "${splitCommand[0]}"`));
+        tPrintln(`Unknown command "${splitCommand[0]}"`);
         return null
     }
 }

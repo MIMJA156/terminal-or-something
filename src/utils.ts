@@ -1,3 +1,5 @@
+import { outputBuffer } from "./globals";
+
 export function charBufferToString(charBuffer: string[]) {
     let string = "";
 
@@ -16,6 +18,20 @@ export function stringToCharBuffer(str: string) {
     });
 
     return charBuffer;
+}
+
+export function tPrintln(msg: string) {
+    let pointer = outputBuffer.getValue();
+    let msgBuffer = stringToCharBuffer(`${msg}\n`);
+
+    Array.prototype.push.apply(pointer, msgBuffer);
+}
+
+export function tPrint(msg: string) {
+    let pointer = outputBuffer.getValue();
+    let msgBuffer = stringToCharBuffer(`${msg}`);
+
+    Array.prototype.push.apply(pointer, msgBuffer);
 }
 
 export class Box<T> {

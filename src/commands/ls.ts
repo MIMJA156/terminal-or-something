@@ -1,6 +1,6 @@
-import { outputBuffer, currentWorkingDirectory } from "../globals";
+import { currentWorkingDirectory } from "../globals";
 import fileSystem from "../fileSystem.json"
-import { stringToCharBuffer } from "../utils";
+import { tPrintln } from "../utils";
 
 export function INFORMATION_ls(): string {
     return `
@@ -35,11 +35,11 @@ export function COMMAND_ls(_args: string[]): number {
     let contents = internal(nameArray, 0, fileSystem);
     let formattedOutput = "";
 
-    contents.forEach((item) => {
-        formattedOutput += `${item}\n`
+    contents.forEach((item, index) => {
+        formattedOutput += `${item}${index < contents.length - 1 ? "\n" : ""}`
     });
 
-    outputBuffer.setValue(stringToCharBuffer(formattedOutput));
+    tPrintln(formattedOutput);
 
     return 0;
 }
