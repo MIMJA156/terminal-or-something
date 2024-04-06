@@ -1,10 +1,12 @@
 import clear from "./command/clear";
+import echo from "./command/echo";
 import load from "./command/load";
 import { StringToFunctionMap } from "./utils";
 
 const map: StringToFunctionMap = {
     "COMMAND_load": load.command,
-    "COMMAND_clear": clear.command
+    "COMMAND_clear": clear.command,
+    "COMMAND_echo": echo.command
 }
 
 self.onmessage = async function (message) {

@@ -3,7 +3,8 @@ import { StringToStringMap, tPrintln } from "./utils";
 
 const commands: StringToStringMap = {
     "load": "COMMAND_load",
-    "clear": "COMMAND_clear"
+    "clear": "COMMAND_clear",
+    "echo": "COMMAND_echo"
 }
 
 export function parseAndExec(input: string): Promise<number> {
