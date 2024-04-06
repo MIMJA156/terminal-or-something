@@ -26,42 +26,19 @@
         background-color: black;
     }
 
-    /* .terminal {} */
-
-    .terminal span {
+    #terminal {
+        width: 100%;
         color: white;
-        font-size: var(--terminal-font-size);
     }
 
-    .terminal .terminal-line {
-        display: flex;
-        align-items: center;
-    }
-
-    #input-buffer-display {
-        white-space: pre;
-    }
-
-    #sudo-cursor {
-        font-size: calc(var(--terminal-font-size) * 0.75);
-    }
-
-    #history-buffer-display {
+    #terminal-text-display {
         white-space: pre;
     }
 </style>
 
 <body>
-    <div class="terminal" id="terminal-container">
-        <span class="terminal-line" id="history-buffer-display"></span>
-        <span class="hidden terminal-line" id="input-line">
-            <span id="hostname"></span>
-            :
-            <span id="current-working-directory"></span>
-            # &nbsp;
-            <span id="input-buffer-display"></span>
-            <span class="blink" id="sudo-cursor">█</span>
-        </span>
+    <div id="terminal">
+        <span id="terminal-text-display"></span>
     </div>
 </body>
 
