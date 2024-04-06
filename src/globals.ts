@@ -1,11 +1,18 @@
-import { Box } from "./utils";
+export class Box<T> {
+    private value: T
 
+    constructor(value: T) {
+        this.value = value;
+    }
 
-export const inputBuffer = new Box<string[]>([]); // array of chars (strings that contain one letter)
-export const outputBuffer = new Box<string[]>([]);
+    getValue() {
+        return this.value;
+    }
 
-export const outputContainer = new Box<string[]>([]);
+    setValue(value: T) {
+        this.value = value;
+    }
+}
 
-export const hostname = new Box<string>("mimja@computer");
-export const currentWorkingDirectory = new Box<string>("/root");
-export const commandHistory = new Box<string[]>([]);
+export const stdout: Box<string[]> = new Box([]);
+export const stdin: Box<string[]> = new Box([]);

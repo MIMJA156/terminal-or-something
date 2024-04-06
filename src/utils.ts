@@ -1,4 +1,12 @@
-import { outputBuffer } from "./globals";
+import { stdout } from "./globals";
+
+export interface StringToStringMap {
+    [key: string]: string;
+}
+
+export interface StringToFunctionMap {
+    [key: string]: (args: string[]) => Promise<number>;
+}
 
 export function charBufferToString(charBuffer: string[]) {
     let string = "";
@@ -20,32 +28,27 @@ export function stringToCharBuffer(str: string) {
     return charBuffer;
 }
 
-export function tPrintln(msg: string) {
-    let pointer = outputBuffer.getValue();
-    let msgBuffer = stringToCharBuffer(`${msg}\n`);
-
-    Array.prototype.push.apply(pointer, msgBuffer);
-}
-
 export function tPrint(msg: string) {
-    let pointer = outputBuffer.getValue();
-    let msgBuffer = stringToCharBuffer(`${msg}`);
+    if (isWorker()) {
+        stringToCharBuffer(`${msg}`).forEach((char) => {
+            postMessage({
+                type: "push",
+                value: char
+            });
+        })
+    } else {
+        let pointer = stdout.getValue();
+        let msgBuffer = stringToCharBuffer(`${msg}`);
 
-    Array.prototype.push.apply(pointer, msgBuffer);
+        Array.prototype.push.apply(pointer, msgBuffer);
+    }
 }
 
-export class Box<T> {
-    private value: T;
+export function tPrintln(msg: string) {
+    tPrint(`${msg}\n`);
+}
 
-    constructor(value: T) {
-        this.value = value;
-    }
-
-    getValue(): T {
-        return this.value;
-    }
-
-    setValue(value: T): void {
-        this.value = value;
-    }
+function isWorker() {
+    //@ts-ignore
+    return typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope
 }

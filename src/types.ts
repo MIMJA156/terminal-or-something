@@ -1,34 +1,15 @@
-interface InformationRegistry {
-    [key: string]: () => string;
-}
+export class Box<T> {
+    private value: T
 
-interface CommandRegistry {
-    [key: string]: (args: string[]) => Promise<number>;
-}
+    constructor(value: T) {
+        this.value = value;
+    }
 
-interface CommandUnit {
-    exec: ((args: string[]) => Promise<number>),
-    args: string[]
-}
+    getValue() {
+        return this.value;
+    }
 
-interface MFileSystem {
-    [key: string]: any;
-}
-
-interface MItem {
-    name: string
-    type: "file" | "dir"
-}
-
-interface MFile extends MItem {
-    type: "file"
-
-    content: string
-    extension: string
-}
-
-interface MDirectory extends MItem {
-    type: "dir"
-
-    contains: MItem[]
+    setValue(value: T) {
+        this.value = value;
+    }
 }
